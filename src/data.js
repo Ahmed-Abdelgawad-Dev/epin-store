@@ -9,6 +9,9 @@ const firebaseConfig = {
   messagingSenderId: "689618131505",
   appId: "1:689618131505:web:1a08d023991f8af8d09310",
 };
+
+
+
 const re_mapper = ({ id, title, description, price, discount, images, category, tags, serials }) => {
   return {
     id,
