@@ -115,7 +115,6 @@ const Pay = ({ email, first_name, last_name }) => {
           }}
           onApprove={(data, actions) => {
             return actions.order.capture().then((details) => {
-              // const name = details.payer.name.given_name;
               alert(`Transaction completed`);
             });
           }}
