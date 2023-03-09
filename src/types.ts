@@ -1,3 +1,8 @@
+import {
+  OnApproveBraintreeData,
+  OnApproveBraintreeActions,
+  CreateOrderBraintreeActions,
+} from "@paypal/react-paypal-js";
 import { Provider } from "./ContextApi";
 type category =
   | "games_gift_card"
@@ -41,6 +46,8 @@ interface filters {
 }
 export interface ContextState {
   loading: boolean;
+  currency: "AED" | "USD";
+  AED: number;
   store: storeProduct[];
   detailProduct: storeProduct;
   cart: storeProduct[];
@@ -92,8 +99,24 @@ export interface ContextState {
   closeModal: () => void;
   setModal: (modal: ContextState["modal"]) => void;
   setLoading: (loading: boolean) => void;
+  changeCurrency: (currency: "AED" | "USD") => void;
 }
 export interface CardParams {
   product: storeProduct;
   titleHight: string;
+}
+export interface PayPalPayment {
+  createOrder: (
+    data: OnApproveBraintreeData,
+    action: CreateOrderBraintreeActions
+  ) => void;
+  ApprovedPurchase: (
+    data: OnApproveBraintreeData,
+    action: OnApproveBraintreeActions
+  ) => void;
+}
+export interface paymentProps {
+  email: string;
+  first_name: string;
+  last_name: string;
 }

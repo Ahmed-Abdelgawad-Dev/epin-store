@@ -20,4 +20,5 @@ export const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
 export const product_col = collection(db, "Tamim", "first", "products");
 export const order_col = collection(db, "Tamim", "first", "orders");
+export const currency_col = collection(db, "Tamim", "first", "currency");
 export const getDocRef = (id) => doc(db, "Tamim", "first", "products", id);

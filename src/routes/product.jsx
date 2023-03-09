@@ -9,6 +9,8 @@ const Product = () => {
    */
   const {
     detailProduct,
+    currency,
+    AED,
     screen: { width },
     addToCart,
     hadelDetails,
@@ -59,7 +61,11 @@ const Product = () => {
         } gap-6`}
       >
         <div>
-          <img src={product.url} alt="product" className="w-1/2 h-3/4 mx-auto" />
+          <img
+            src={product.url}
+            alt="product"
+            className="w-1/2 h-3/4 mx-auto"
+          />
         </div>
 
         <div>
@@ -93,12 +99,25 @@ const Product = () => {
             </p>
           </div>
           <div className="flex items-baseline mb-1 space-x-2 font-roboto mt-4">
-            <p className="text-base text-red-700 font-semibold">
-              AED {(product.price) * 3.75}
-              </p>
-              <p className="text-xs text-gray-400 line-through">
-              AED {(product.before_discount) * 3.75}
-            </p>
+            {currency == "USD" ? (
+              <>
+                <p className="text-base text-red-700 font-semibold">
+                  $ {product.price}
+                </p>
+                <p className="text-xs text-gray-400 line-through">
+                  $ {product.before_discount}
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="text-base text-red-700 font-semibold">
+                  AED {product.price * AED}
+                </p>
+                <p className="text-xs text-gray-400 line-through">
+                  AED {product.before_discount * AED}
+                </p>
+              </>
+            )}
           </div>
 
           <p className="mt-4 text-gray-600">{product.description}</p>

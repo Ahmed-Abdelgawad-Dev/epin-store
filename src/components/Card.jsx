@@ -9,7 +9,7 @@ const Card = ({ product, titleHight }) => {
   /**
    * @type {import('../types').ContextState}
    */
-  const { addToCart } = useContext(Context);
+  const { addToCart, AED, currency } = useContext(Context);
   return (
     <div
       key={id.toString()}
@@ -24,7 +24,8 @@ const Card = ({ product, titleHight }) => {
             className="absolute inset-0 bg-black bg-opacity-40 flex items-center
                     justify-center gap-2 opacity-0 group-hover:opacity-100 transition"
           >
-            <a href="#"
+            <a
+              href="#"
               className="text-white text-lg w-9 h-8 rounded-full bg-primary flex items-center justify-center hover:bg-gray-800 transition"
               title="view product"
             >
@@ -37,12 +38,23 @@ const Card = ({ product, titleHight }) => {
             {title}
           </h6>
           <div className="flex items-baseline mb-1 space-x-2">
-            <p className="text-sm text-primary font-semibold">
-              AED {price*3.75}
-            </p>
-            <p className="text-xs text-gray-400 line-through">
-              AED{before_discount*3.75}
-            </p>
+            {currency === "USD" ? (
+              <>
+                <p className="text-sm text-primary font-semibold">$ {price}</p>
+                <p className="text-xs text-gray-400 line-through">
+                  ${before_discount}
+                </p>
+              </>
+            ) : (
+              <>
+                <p className="text-sm text-primary font-semibold">
+                  AED {price * AED}
+                </p>
+                <p className="text-xs text-gray-400 line-through">
+                  AED{before_discount * AED}
+                </p>
+              </>
+            )}
           </div>
         </div>
       </Link>

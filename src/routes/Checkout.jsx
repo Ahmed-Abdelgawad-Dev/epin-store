@@ -1,6 +1,7 @@
 import { orderBy, serverTimestamp } from "@firebase/firestore";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import Pay from "../components/payment";
 import Spinner from "../components/spinner";
 import { Context } from "../ContextApi";
 const Policy = `
@@ -230,13 +231,20 @@ const Checkout = () => {
   const [email, setEmail] = useState("");
   const [first_name, setFirstName] = useState("");
   const [last_name, setLastName] = useState("");
-
   const [agree, setAgree] = useState(false);
+
+  const clearState = () => {
+    setEmail("");
+    setFirstName("");
+    setLastName("");
+    setAgree(false);
+  };
   /**
    * @type {import('../types').ContextState}
    */
   const {
-    loading,
+    currency,
+    AED,
     cart,
     carttotal,
     screen: { width },
@@ -244,10 +252,11 @@ const Checkout = () => {
     closeModal,
     setModal,
     deleteItem,
-    clearCart,
-    checkout,
-    setLoading,
   } = useContext(Context);
+
+  /**
+   * display policy to the customer
+   */
   const handelPolicy = () => {
     setModal({
       hidden: false,
@@ -269,25 +278,11 @@ const Checkout = () => {
       },
     });
   };
-  /**
-   * @param {string}title
-   *
-   * @returns {string}
-   */
-  const truncateTitle = (title) => {
-    const str = title.slice(0, 13) + "...";
-    return str;
-  };
+  // validation form -----------------------------------------------------------
+  const email_regex =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  const [validForm, setValidForm] = useState(false);
   const isValid = () => {
-    /**check
-     * terms
-     * email has and valid
-     * fname has
-     * lname has
-     * products has
-     */
-    const email_regex =
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (
       email_regex.test(email) &&
       agree &&
@@ -297,76 +292,39 @@ const Checkout = () => {
     ) {
       return true;
     } else {
-      setModal({
-        ...modal,
-        hidden: false,
-        title: "Checkout Order",
-        body: `
-      ${!agree ? "you need to agree to terms of services" : ""}
-      ${!first_name ? "First Name is required" : ""}
-      ${!last_name ? "Last name is required" : ""}
-      ${!email_regex.test(email) ? "you need to enter valid email" : ""}
-      `,
-        success: {
-          text: "OK",
-          onClick: (e) => {
-            closeModal();
-            setLoading(false);
-          },
-        },
-      });
       return false;
     }
   };
-  const checkout_order = () => {
-    // TODO PYAMENT
-    // TODO MAIL
-    // TODO MAIL SERIALS
-    setLoading(true);
-    if (isValid()) {
-      const order = {
-        email: email,
-        first_name,
-        last_name,
-        order_price: carttotal,
-        created_at: serverTimestamp(),
-        products: cart.map((c) => {
-          return {
-            product_id: c.id,
-            quantity: c.count,
-            serials: c.serials.splice(0, c.count),
-            total_price: c.price * c.count,
-          };
-        }),
-        status: "pending",
-      };
-      checkout(order).then((success) => {
-        if (success) {
-          setModal({
-            ...modal,
-            hidden: false,
-            title: "Checkout Order",
-            body: `\
-            your order have been received we will send you mail soon
-          `,
-            success: {
-              text: "OK",
-              onClick: (e) => {
-                closeModal();
-                clearCart();
-                setLoading(false);
-                setEmail("");
-                setFirstName("");
-                setLastName("");
-                setAgree(false);
-              },
-            },
-          });
-        }
-      });
-    }
-    setLoading(false);
+  /**
+   * display the model with the validation errors in form
+   * ex.
+   * email is not valid email
+   */
+  const ShowModelForErrors = () => {
+    setModal({
+      ...modal,
+      hidden: false,
+      title: "Checkout Order",
+      body: `
+    ${!agree ? "you need to agree to terms of services" : ""}
+    ${!first_name ? "First Name is required" : ""}
+    ${!last_name ? "Last name is required" : ""}
+    ${!email_regex.test(email) ? "you need to enter valid email" : ""}
+    ${cart.length <= 0 ? "you can't make empty order" : ""} 
+    `,
+      success: {
+        text: "OK",
+        onClick: (e) => {
+          closeModal();
+        },
+      },
+    });
   };
+  useEffect(() => {
+    setValidForm(isValid());
+  }, [first_name, last_name, agree, email]);
+  // end validation form -------------------------------------------------------
+
   const deleteItemFromCart = (id) => {
     deleteItem(id);
   };
@@ -450,14 +408,22 @@ const Checkout = () => {
                 >
                   <div className=" checkout-item-title">
                     <h5 className="text-gray-800 font-medium text-xs">
-                      {(product.title)}
+                      {product.title}
                     </h5>
                   </div>
-                  <p className="text-gray-800 font-small text-sm">{(product.price)*3.75}</p>
-                  <p className="text-gray-600">x{product.count}</p>
                   <p className="text-gray-800 font-small text-sm">
-                    AED {((product.price * 3.75) * product.count).toFixed(2)}
+                    {currency == "AED" ? product.price * AED : product.price}
                   </p>
+                  <p className="text-gray-600">x{product.count}</p>
+                  {currency == "AED" ? (
+                    <p className="text-gray-800 font-small text-sm">
+                      AED {(product.price * AED * product.count).toFixed(2)}
+                    </p>
+                  ) : (
+                    <p className="text-gray-800 font-small text-sm">
+                      $ {(product.price * product.count).toFixed(2)}
+                    </p>
+                  )}
                   <div
                     className="text-red-600 hover:bg-red-100 rounded-full text-center cursor-pointer"
                     onClick={() => deleteItemFromCart(product.id)}
@@ -471,7 +437,11 @@ const Checkout = () => {
 
           <div className="flex justify-between text-gray-800 font-medium py-3 uppercas">
             <p className="font-semibold text-red-700">Total</p>
-            <p className="text-red-600">AED {(carttotal)*3.75}</p>
+            {currency === "USD" ? (
+              <p className="text-red-600">$ {carttotal}</p>
+            ) : (
+              <p className="text-red-600">AED {carttotal * 3.75}</p>
+            )}
           </div>
 
           <div className="flex items-center mb-4 mt-2">
@@ -495,13 +465,11 @@ const Checkout = () => {
             </div>
           </div>
 
-          {loading ? (
-            <button className="block w-full py-3 px-4 text-center text-white bg-primary border border-primary rounded-md hover:bg-transparent hover:text-primary transition font-medium">
-              <Spinner className="text-xl" />
-            </button>
+          {validForm ? (
+            <Pay {...{ email, first_name, last_name }} />
           ) : (
             <button
-              onClick={checkout_order}
+              onClick={ShowModelForErrors}
               className="block w-full py-3 px-4 text-center text-white bg-primary border border-primary rounded-md hover:bg-transparent hover:text-primary transition font-medium"
             >
               Place order

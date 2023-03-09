@@ -19,7 +19,6 @@ const Model = () => {
       left-0
       right-0
       bottom-0
-      z-50
       w-full
       p-4
       overflow-x-hidden
@@ -29,6 +28,7 @@ const Model = () => {
       md:h-full`}
       style={{
         backgroundColor: "#00000099",
+        zIndex: 2147483660,
       }}
     >
       <div className="relative w-full h-full max-w-2xl md:h-auto">

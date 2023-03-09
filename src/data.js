@@ -1,14 +1,7 @@
 import { addDoc, doc, getDocs, updateDoc } from "@firebase/firestore";
-import { db, getDocRef, order_col, product_col } from "./firebase.conf";
+import { currency_col, db, getDocRef, order_col, product_col } from "./firebase.conf";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDENrnzZWE201uI5dxM1C6CmQTdTEy_64s",
-  authDomain: "e-commerce-a9286.firebaseapp.com",
-  projectId: "e-commerce-a9286",
-  storageBucket: "e-commerce-a9286.appspot.com",
-  messagingSenderId: "689618131505",
-  appId: "1:689618131505:web:1a08d023991f8af8d09310",
-};
+
 
 
 
@@ -43,6 +36,15 @@ export const detailProduct = re_mapper({
   "category": "top_up_card"
 })
 
+const getCurrency = async () => {
+  const snapshots = await getDocs(currency_col);
+  let currency = 3.75;
+  for (const doc of snapshots.docs) {
+    const db_row = doc.data();
+    currency = db_row.Price;
+  }
+  return currency;
+}
 export const getStoreProducts = async () => {
   const snapshots = await getDocs(product_col);
   const data = [];
@@ -56,7 +58,8 @@ export const getStoreProducts = async () => {
     })
     data.push(item);
   }
-  return { data, tags: [...tags], categories: [...categories] };
+  const currency_transaction = await getCurrency();
+  return { data, tags: [...tags], categories: [...categories], AED: currency_transaction };
 }
 /**
  * @param {import('./types').order} order

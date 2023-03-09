@@ -4,6 +4,8 @@ const Context = React.createContext();
 class Provider extends Component {
   state = {
     loading: true,
+    currency: "USD",
+    AED: 3.75,
     screen: {
       width: window.innerWidth,
       height: window.innerHeight,
@@ -37,18 +39,6 @@ class Provider extends Component {
       title: "Terms of Service",
       body: `
       With less than a month to go before the European Union enacts new consumer privacy laws for its citizens, companies around the world are updating their terms of service agreements to comply.
-      With less than a month to go before the European Union enacts new consumer privacy laws for its citizens, companies around the world are updating their terms of service agreements to comply.
-      With less than a month to go before the European Union enacts new consumer privacy laws for its citizens, companies around the world are updating their terms of service agreements to comply.
-      With less than a month to go before the European Union enacts new consumer privacy laws for its citizens, companies around the world are updating their terms of service agreements to comply.
-      With less than a month to go before the European Union enacts new consumer privacy laws for its citizens, companies around the world are updating their terms of service agreements to comply.
-      With less than a month to go before the European Union enacts new consumer privacy laws for its citizens, companies around the world are updating their terms of service agreements to comply.
-      With less than a month to go before the European Union enacts new consumer privacy laws for its citizens, companies around the world are updating their terms of service agreements to comply.
-      With less than a month to go before the European Union enacts new consumer privacy laws for its citizens, companies around the world are updating their terms of service agreements to comply.
-      With less than a month to go before the European Union enacts new consumer privacy laws for its citizens, companies around the world are updating their terms of service agreements to comply.
-      With less than a month to go before the European Union enacts new consumer privacy laws for its citizens, companies around the world are updating their terms of service agreements to comply.
-      With less than a month to go before the European Union enacts new consumer privacy laws for its citizens, companies around the world are updating their terms of service agreements to comply.
-      With less than a month to go before the European Union enacts new consumer privacy laws for its citizens, companies around the world are updating their terms of service agreements to comply.
-      With less than a month to go before the European Union enacts new consumer privacy laws for its citizens, companies around the world are updating their terms of service agreements to comply.
       The European Union’s General Data Protection Regulation (G.D.P.R.) goes into effect on May 25 and is meant to ensure a common set of data rights in the European Union. It requires organizations to notify users as soon as possible of high-risk data breaches that could personally affect them.`,
       success: {
         text: "Agree",
@@ -60,7 +50,9 @@ class Provider extends Component {
       },
     },
   };
-
+  changeCurrency = (currency) => {
+    this.setState({ currency });
+  };
   componentDidMount() {
     window.addEventListener("resize", (e) => {
       this.setState({
@@ -74,7 +66,7 @@ class Provider extends Component {
   }
   // add data to this.state.store function
   setStore = () => {
-    getStoreProducts().then(({ data: root_store, tags, categories }) => {
+    getStoreProducts().then(({ data: root_store, tags, categories, AED }) => {
       root_store = root_store.map((st) => ({
         ...st,
         // extra product data that needed locally
@@ -90,6 +82,7 @@ class Provider extends Component {
             detailProduct: root_store[0],
             tags,
             categories,
+            AED,
           };
         },
         () => {
@@ -239,6 +232,7 @@ class Provider extends Component {
     const tempTax = 0;
     const tax = parseFloat(tempTax.toFixed(2));
     const total = parseFloat((subTotal + tax).toFixed(2));
+    console.log('Cart Total Amount: ',total);
     this.setState(() => {
       return {
         cartsubtotal: subTotal,
@@ -283,6 +277,7 @@ class Provider extends Component {
           closeModal: this.closeModal,
           setModal: this.setModal,
           setLoading: this.setLoading,
+          changeCurrency: this.changeCurrency,
         }}
       >
         {this.props.children}

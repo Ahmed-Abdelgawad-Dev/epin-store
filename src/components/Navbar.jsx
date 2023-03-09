@@ -7,13 +7,13 @@ const Navbar = () => {
   /**
    * @type {import('../types').ContextState}
    */
-  const { cart, categories } = useContext(Context);
+  const { cart, categories, currency, changeCurrency } = useContext(Context);
   const style_ = {
     color: "white",
     backgroundColor: "#3c284b",
     padding: "0px",
     margin: "0px",
-    width: "8rem"
+    width: "8rem",
   };
   return (
     <>
@@ -21,9 +21,15 @@ const Navbar = () => {
         <div className="container flex items-center justify-between">
           <div className="rounded">
             <a href="index.html">
-              <img src="assets/images/logo.jpg" alt="Logo" className="w-32 pb-0" />
+              <img
+                src="assets/images/logo.jpg"
+                alt="Logo"
+                className="w-32 pb-0"
+              />
               <p style={style_}>
-                <span className="text-xs p-3 pt-0">اكواد للألعاب العالمية </span>
+                <span className="text-xs p-3 pt-0">
+                  اكواد للألعاب العالمية{" "}
+                </span>
               </p>
             </a>
           </div>
@@ -94,7 +100,7 @@ const Navbar = () => {
             </div>
           </div>
 
-          <div className="flex items-center justify-between flex-grow pl-12">
+          <div className="flex items-center justify-between flex-wrap flex-grow pl-12">
             <div className="flex items-center space-x-6 capitalize">
               <Link
                 to="/"
@@ -108,6 +114,48 @@ const Navbar = () => {
               >
                 Shop
               </Link>
+            </div>
+            <div>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <span class="mr-3 text-sm font-medium text-gray-300">AED</span>
+                <input
+                  type="checkbox"
+                  value=""
+                  checked={currency === "USD"}
+                  onChange={(e) => {
+                    changeCurrency(e.target.checked ? "USD" : "AED");
+                  }}
+                  class="sr-only peer"
+                />
+                <div
+                  class={`w-11 h-6
+                bg-gray-200
+                peer-focus:outline-none
+                peer-focus:ring-4
+                peer-focus:ring-blue-300
+                dark:peer-focus:ring-blue-800
+                rounded-full
+                peer
+                dark:bg-gray-700
+                peer-checked:after:translate-x-full
+                peer-checked:after:border-white
+                after:content-['']
+                after:absolute
+                after:top-[2px]
+                after:right-[60px]
+                after:bg-white
+                after:border-gray-300
+                after:border
+                after:rounded-full
+                after:h-5
+                after:w-5
+                after:transition-all
+                dark:border-gray-600
+                peer-checked:bg-blue-600`}
+                ></div>
+
+                <span class="ml-3 text-sm font-medium text-gray-300">USD</span>
+              </label>
             </div>
           </div>
         </div>
