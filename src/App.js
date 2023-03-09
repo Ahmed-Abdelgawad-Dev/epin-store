@@ -6,6 +6,7 @@ import Shop from "./routes/Shop.jsx";
 import Product from "./routes/product.jsx";
 import Checkout from "./routes/Checkout.jsx";
 import Model from "./components/Model.jsx";
+import Paymentsuccess from "./components/Paymentsuccess.jsx";
 function App() {
   return (
     <Router>
@@ -21,6 +22,7 @@ function App() {
           <Route exact path="/shop" element={<Shop />} />
           <Route exact path="/shop/:productID" element={<Product />} />
           <Route exact path="/checkout" element={<Checkout />} />
+          <Route exact path="/paymentsuccess" element={<Paymentsuccess />} />
           <Route path="*" element={<Navigate to="/" />} />
         </Route>
       </Routes>

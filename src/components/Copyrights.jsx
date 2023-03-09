@@ -5,7 +5,8 @@ const Copyrights = () => {
     <div className="bg-gray-800 py-4 bottom-0 w-full mt-20">
       <div className="container flex flex-warp items-center justify-between">
         <p className="text-white">
-          <a className="text-xs" href="https://lancerfree.com" target="_blank" rel="noreferrer">©NASIM AL AZRAK PORTAL L.L.C</a><br />
+          <a className="text-xs" href="/"  rel="noreferrer">©NASIM AL AZRAK PORTAL L.L.C</a><br />
+          {/* <a className="text-xs" href="https://lancerfree.com" target="_blank" rel="noreferrer">©NASIM AL AZRAK PORTAL L.L.C</a><br /> */}
           <p className="text-xs">License N. 1143226</p>
         </p>
         <p className="text-white">

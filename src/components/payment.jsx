@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { Context } from "../ContextApi";
+import Paymentsuccess from "./Paymentsuccess";
 import { serverTimestamp } from "@firebase/firestore";
 //todo reFormate the order for cart order
 /**
@@ -103,6 +104,7 @@ const Pay = ({ email, first_name, last_name }) => {
       <PayPalScriptProvider
         options={{
           "client-id": process.env.REACT_APP_PAYPAL_CLIENT_ID2,
+          // "client-id": process.env.REACT_APP_PAYPAL_CLIENT_ID_testing,
           // "client-id": process.env.REACT_APP_PAYPAL_CLIENT_ID,
         }}
       >
@@ -111,6 +113,9 @@ const Pay = ({ email, first_name, last_name }) => {
           // onApprove={ApprovedPurchase}
           onApprove={(data, actions) => {
             return actions.order.capture().then(function (details) { alert('Transaction Success') })
+            // return actions.order.capture().then(function (details) {
+            //   <Paymentsuccess />
+            //  })
           }}
           style={{ layout: "vertical" }}
         />
