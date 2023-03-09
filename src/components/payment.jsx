@@ -123,6 +123,7 @@ const Pay = ({ email, first_name, last_name }) => {
       {/* <PayPalScriptProvider
         options={{
           "client-id": process.env.REACT_APP_PAYPAL_CLIENT_ID_testing,
+          "client-id": process.env.REACT_APP_PAYPAL_CLIENT_ID,
         }}
       >
         <PayPalButtons
