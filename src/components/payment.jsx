@@ -11,7 +11,7 @@ const Pay = ({ email, first_name, last_name }) => {
    * @type {import('../types').ContextState}
    */
   const {
-    currency,
+    // currency,
     cart,
     carttotal,
     modal,
@@ -67,7 +67,7 @@ const Pay = ({ email, first_name, last_name }) => {
         // todo map the order
         {
           amount: {
-            // currency_code: "USD",
+            currency_code: "USD",
             value: carttotal.toString(),
           },
         },
@@ -102,13 +102,15 @@ const Pay = ({ email, first_name, last_name }) => {
     <div className="pt-8">
       <PayPalScriptProvider
         options={{
-          "client-id": process.env.REACT_APP_PAYPAL_CLIENT_ID,
+          "client-id": process.env.REACT_APP_PAYPAL_CLIENT_ID2,
         }}
       >
         <PayPalButtons
           createOrder={createOrder}
-          onApprove={ApprovedPurchase}
-          // onApprove={(data, actions) => { return actions.order.capture().then(function (details) { alert('Transaction Success') }) }}
+          // onApprove={ApprovedPurchase}
+          onApprove={(data, actions) => {
+            return actions.order.capture().then(function (details) { alert('Transaction Success') })
+          }}
           style={{ layout: "vertical" }}
         />
       </PayPalScriptProvider>
